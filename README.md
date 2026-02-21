@@ -1,73 +1,148 @@
-# Welcome to your Lovable project
+# 🏦 KodBank
 
-## Project info
+A modern, full-stack banking demo application built with React, TypeScript, and Supabase. KodBank provides a clean and intuitive interface for managing bank accounts and financial transactions.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+---
 
-## How can I edit this code?
+## ✨ Features
 
-There are several ways of editing your application.
+- **Account Management** — View and manage bank accounts in one place
+- **Transaction Tracking** — Monitor deposits, withdrawals, and transfers
+- **Real-time Data** — Powered by Supabase for live backend updates
+- **Responsive UI** — Built with Tailwind CSS and shadcn/ui for a polished experience
+- **Type-Safe Codebase** — End-to-end TypeScript for reliability and maintainability
 
-**Use Lovable**
+---
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## 🛠️ Tech Stack
 
-Changes made via Lovable will be committed automatically to this repo.
+| Layer | Technology |
+|---|---|
+| Frontend Framework | [React](https://react.dev/) |
+| Language | [TypeScript](https://www.typescriptlang.org/) |
+| Build Tool | [Vite](https://vitejs.dev/) |
+| Styling | [Tailwind CSS](https://tailwindcss.com/) |
+| UI Components | [shadcn/ui](https://ui.shadcn.com/) |
+| Backend / Database | [Supabase](https://supabase.com/) |
+| Testing | [Vitest](https://vitest.dev/) |
+| Package Manager | [Bun](https://bun.sh/) / npm |
 
-**Use your preferred IDE**
+---
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## 🚀 Getting Started
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Prerequisites
 
-Follow these steps:
+- [Node.js](https://nodejs.org/) (v18+) or [Bun](https://bun.sh/)
+- A [Supabase](https://supabase.com/) account and project
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### Installation
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+```bash
+# 1. Clone the repository
+git clone https://github.com/AbhinavKG27/KodBank.git
 
-# Step 3: Install the necessary dependencies.
-npm i
+# 2. Navigate into the project directory
+cd KodBank
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+# 3. Install dependencies
+npm install
+# or with Bun
+bun install
 ```
 
-**Edit a file directly in GitHub**
+### Environment Setup
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Create a `.env` file in the root directory and add your Supabase credentials:
 
-**Use GitHub Codespaces**
+```env
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+> You can find these values in your Supabase project under **Settings → API**.
 
-## What technologies are used for this project?
+### Database Setup
 
-This project is built with:
+Apply the database schema using the Supabase CLI:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+```bash
+supabase db push
+```
 
-## How can I deploy this project?
+Or run the migration files found in the `/supabase` directory manually via the Supabase dashboard.
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+### Running the App
 
-## Can I connect a custom domain to my Lovable project?
+```bash
+# Start the development server
+npm run dev
+# or
+bun run dev
+```
 
-Yes, you can!
+The app will be available at `http://localhost:5173`.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+---
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## 📁 Project Structure
+
+```
+KodBank/
+├── public/             # Static assets
+├── src/                # Application source code
+│   ├── components/     # Reusable UI components
+│   ├── pages/          # Route-level page components
+│   ├── hooks/          # Custom React hooks
+│   └── lib/            # Utilities and Supabase client
+├── supabase/           # Supabase migrations and config
+├── .env                # Environment variables
+├── tailwind.config.ts  # Tailwind CSS configuration
+├── vite.config.ts      # Vite build configuration
+└── vitest.config.ts    # Vitest test configuration
+```
+
+---
+
+## 🧪 Running Tests
+
+```bash
+npm run test
+# or
+bun run test
+```
+
+---
+
+## 📦 Building for Production
+
+```bash
+npm run build
+```
+
+The production-ready files will be output to the `dist/` directory.
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create a new branch (`git checkout -b feature/your-feature`)
+3. Commit your changes (`git commit -m 'Add your feature'`)
+4. Push to the branch (`git push origin feature/your-feature`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+---
+
+## 👤 Author
+
+**Abhinav KG**  
+GitHub: [@AbhinavKG27](https://github.com/AbhinavKG27)
