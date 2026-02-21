@@ -9,16 +9,25 @@ const userRoutes = require("./routes/userRoutes");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Middleware
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: ["http://localhost:8080", "http://localhost:5173"], // Vite frontend
   credentials: true,
 }));
+
 app.use(express.json());
 app.use(cookieParser());
 
+// Routes (VERY IMPORTANT)
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 
-app.get("/", (req, res) => res.json({ status: "Kodbank API running" }));
+// Test route
+app.get("/", (req, res) => {
+  res.send("Kodbank Backend Running with Neon 🚀");
+});
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Start server
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
