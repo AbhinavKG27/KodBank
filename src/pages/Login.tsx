@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -15,34 +16,15 @@ const Login = () => {
     setLoading(true);
 
     try {
-      // Look up email by username
-      const { data: user, error: lookupError } = await supabase
-        .from("kod_users")
-        .select("email, id")
-        .eq("username", username)
-        .maybeSingle();
-
-      if (lookupError || !user) {
-        throw new Error("Invalid username or password");
-      }
-
-      // Sign in with Supabase Auth (verifies bcrypt hash)
-      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-        email: user.email,
-        password,
+      const res = await fetch(`${API_URL}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ username, password }),
       });
 
-      if (authError) throw new Error("Invalid username or password");
-
-      // Store token record in user_tokens table
-      const session = authData.session;
-      if (session) {
-        await supabase.from("user_tokens").insert({
-          token: session.access_token,
-          uid: user.id,
-          expiry: new Date(session.expires_at! * 1000).toISOString(),
-        });
-      }
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Login failed");
 
       navigate("/userdashboard");
     } catch (err: any) {

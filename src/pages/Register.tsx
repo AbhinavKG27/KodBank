@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -18,31 +19,16 @@ const Register = () => {
     setLoading(true);
 
     try {
-      // Sign up with Supabase Auth (password is hashed automatically via bcrypt)
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: form.email,
-        password: form.password,
-        options: { data: { username: form.username } },
+      const res = await fetch(`${API_URL}/api/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(form),
       });
 
-      if (authError) throw authError;
-      if (!authData.user) throw new Error("Registration failed");
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Registration failed");
 
-      // Insert into kod_users profile table
-      const { error: profileError } = await supabase.from("kod_users").insert({
-        id: authData.user.id,
-        uid: form.uid,
-        username: form.username,
-        email: form.email,
-        phone: form.phone,
-        role: "Customer",
-        balance: 100000,
-      });
-
-      if (profileError) throw profileError;
-
-      // Sign out so they go to login
-      await supabase.auth.signOut();
       navigate("/login");
     } catch (err: any) {
       setError(err.message || "Registration failed");

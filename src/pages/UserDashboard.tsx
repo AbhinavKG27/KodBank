@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
 import confetti from "canvas-confetti";
+
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const UserDashboard = () => {
   const navigate = useNavigate();
@@ -13,18 +14,19 @@ const UserDashboard = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
+      try {
+        const res = await fetch(`${API_URL}/api/user/profile`, {
+          credentials: "include",
+        });
+        if (!res.ok) {
+          navigate("/login");
+          return;
+        }
+        const data = await res.json();
+        setUsername(data.username);
+      } catch {
         navigate("/login");
-        return;
       }
-      // Get username
-      const { data } = await supabase
-        .from("kod_users")
-        .select("username")
-        .eq("id", session.user.id)
-        .single();
-      if (data) setUsername(data.username);
     };
     checkAuth();
   }, [navigate]);
@@ -58,33 +60,20 @@ const UserDashboard = () => {
     setLoading(true);
     setError("");
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
+      const res = await fetch(`${API_URL}/api/user/balance`, {
+        credentials: "include",
+      });
+
+      if (res.status === 401) {
         setError("Session expired. Please login again.");
         setTimeout(() => navigate("/login"), 2000);
         return;
       }
 
-      // Verify token is not expired
-      const expiresAt = session.expires_at;
-      if (expiresAt && expiresAt * 1000 < Date.now()) {
-        setError("Token expired. Please login again.");
-        await supabase.auth.signOut();
-        setTimeout(() => navigate("/login"), 2000);
-        return;
-      }
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to fetch balance");
 
-      // Fetch balance
-      const { data, error: fetchError } = await supabase
-        .from("kod_users")
-        .select("balance")
-        .eq("id", session.user.id)
-        .single();
-
-      if (fetchError) throw fetchError;
-      if (!data) throw new Error("User not found");
-
-      setBalance(Number(data.balance));
+      setBalance(data.balance);
       setShowBalance(true);
       triggerConfetti();
     } catch (err: any) {
@@ -95,7 +84,10 @@ const UserDashboard = () => {
   };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    await fetch(`${API_URL}/api/auth/logout`, {
+      method: "POST",
+      credentials: "include",
+    });
     navigate("/login");
   };
 
